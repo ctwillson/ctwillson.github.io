@@ -2,14 +2,6 @@
   name: ctwillson
   url: https://github.com/ctwillson
 
-- sitename: 掘金
-  name: mzlogin
-  url: http://gold.xitu.io/user/570ddaeb2e958a005c63b2da
-
-- sitename: LinkedIn
-  name: mazhuang
-  url: https://www.linkedin.com/in/mazhuang
-
 - sitename: CSDN博客
   name: 多次拒绝刘亦菲
   url: http://blog.csdn.net/ctwillson
@@ -22,6 +14,3 @@
   name: 多次拒绝刘亦菲
   url: zhihu.com/people/duo-ci-ju-jue-liu-yi-fei
 
-- sitename: 豆瓣
-  name: 壮哥不胖
-  url: http://www.douban.com/people/freedim
