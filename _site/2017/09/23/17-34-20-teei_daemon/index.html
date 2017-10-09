@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>再谈原型和继承 &mdash; ctwillson</title>
+    <link rel="stylesheet" href="http://localhost:4000/assets/vendor/primer-css/css/primer.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/vendor/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/vendor/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/components/collection.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/components/repo-card.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/sections/repo-list.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/sections/mini-repo-list.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/components/boxed-group.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/globals/common.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/vendor/share.js/dist/css/share.min.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/globals/responsive.css">
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/posts/index.css">
+    <!-- Latest compiled and minified CSS -->
+    
+
+    
+    <link rel="canonical" href="http://localhost:4000/2017/09/23/17-34-20-teei_daemon/">
+    <link rel="alternate" type="application/atom+xml" title="ctwillson" href="/feed.xml">
+    <link rel="shortcut icon" href="http://localhost:4000/favicon.ico">
+    
+    <meta property="og:title" content="再谈原型和继承">
+      
+    <meta name="keywords" content="ctwillson, 多次拒绝刘亦菲, hooltech, 忽忽">
+    <meta name="og:keywords" content="ctwillson, 多次拒绝刘亦菲, hooltech, 忽忽">
+      
+    <meta name="description" content="```">
+    <meta name="og:description" content="```">
+      
+    
+    
+        
+    
+    <meta property="og:url" content="http://localhost:4000/2017/09/23/17-34-20-teei_daemon/">
+    <meta property="og:site_name" content="ctwillson">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="zh_CN" />
+    
+    <meta property="article:published_time" content="2017-09-23">
+    
+    <script src="http://localhost:4000/assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="http://localhost:4000/assets/js/jquery-ui.js"></script>
+    <script type="text/javascript">
+    function toggleMenu() {
+        var nav = document.getElementsByClassName("site-header-nav")[0];
+        if (nav.style.display == "inline-flex") {
+          nav.style.display = "none";
+        } else {
+          nav.style.display = "inline-flex";
+        }
+    }
+    </script>
+</head>
+<body class="" data-mz="">
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="http://localhost:4000/" title="ctwillson"><span class="octicon octicon-mark-github"></span> ctwillson</a></h1>
+            <button class="collapsed mobile-visible" type="button" onclick="toggleMenu();">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <nav class="site-header-nav" role="navigation">
+                
+                <a href="/" class=" site-header-nav-item" target="" title="首页">首页</a>
+                
+                <a href="/categories/" class=" site-header-nav-item" target="" title="分类">分类</a>
+                
+                <a href="/wiki/" class=" site-header-nav-item" target="" title="维基">维基</a>
+                
+                <a href="/links/" class=" site-header-nav-item" target="" title="链接">链接</a>
+                
+                <a href="/about/" class=" site-header-nav-item" target="" title="关于">关于</a>
+                
+            </nav>
+        </div>
+    </header>
+    <!-- / header -->
+
+    <section class="collection-head small geopattern" data-pattern-id="再谈原型和继承">
+<div class="container">
+  <div class="columns">
+    <div class="column three-fourths">
+      <div class="collection-title">
+        <h1 class="collection-header">再谈原型和继承</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2017/09/23
+          </span>
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="http://localhost:4000/categories/#研究生涯" title="研究生涯">研究生涯</a>
+          </span>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<!-- / .banner -->
+<section class="container content">
+<div class="columns">
+  <div class="column three-fourths" >
+    <article class="article-content markdown-body">
+    <ul id="markdown-toc">
+  <li><a href="#总结" id="markdown-toc-总结">总结</a></li>
+</ul>
+<div class="highlighter-rouge"><pre class="highlight"><code>
+## 前言
+在开发过程中用到了**teei_daemon**，一开始没有关注它的具体实现用来干什么，结果出了问题，花了不少时间才解决了，下面就来简要分析下teei_daemon的工作流程
+
+## teei_daemon简介
+
+主要是引导豆荚相关的tee os，关于tee？简单说一下：TEE(Trust Execution Environment)，也叫可信执行环境。相对于还有REE(Rich Execution Environment)，都属于arm的一种操作模式。TEE和REE分别又对应了Secure World和Normal World。像我们相关的Linux都是应用在Normal World，而涉及到指纹支付，签名校验都是在Secure World。对于Android的keystore都是与TEE密切相关的
+那TEE环境下也需要有自己的操作系统Trustonic、高通的QSEE、国内的豆荚，还有开源的OPTEE等，目前Google自己也有一套相关的TEE相关的操作系统。
+好了，说了那么多，teei_daemon到底是拿来干嘛的？简单来说用于引导加载tee相关的OS环境，这里是用来引导豆荚相关的OS。
+
+## teei_daemon代码分析
+
+teei_daemon在相关init.rc中启动
+
+</code></pre>
+</div>
+<p>service tee_microtrust /sbin/teei_daemon
+    disabled
+    oneshot
+    seclabel u:r:recovery:s0</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>teei_daemon相关源码路径在 `hardware/samsung_slsi/&lt; platform &gt;/teei_daemon/`，很简单的只有几个文件，我们从main.c开始看
+
+- 首先函数一开始打印相关版本信息，并设置了相关属性值。同时申请了BUFFER_SIZE的内存空间，后面会用到
+
+```c
+    IMSG_ERROR("TEEI Daemon VERSION [%s]", UTOS_VERSION);
+    IMSG_INFO("TEEI Daemon VERSION [%s]", UTOS_VERSION);
+    IMSG_INFO("TEEI Daemon start ...");
+    property_set("soter.teei.init", "INIT_START");
+    rw_buffer = (unsigned char*)malloc(BUFFER_SIZE);
+    if (rw_buffer == NULL) {
+        IMSG_ERROR("%s : %d Can not malloc enough memory.\n", __func__, __LINE__);
+        return -1;
+    }
+
+</code></pre>
+</div>
+<ul>
+  <li>打开<code class="highlighter-rouge">/dev/tz_vfs</code>这个设备节点，否则一直等待直到成功打开.内核中该节点注册在drivers/teei/V1.0/tz_driver/目录下</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><pre class="highlight"><code>    <span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">vfs_fd</span> <span class="o">=</span> <span class="n">open</span><span class="p">(</span><span class="n">DEV_FILE</span><span class="p">,</span> <span class="n">O_RDWR</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">vfs_fd</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">IMSG_ERROR</span><span class="p">(</span><span class="s">"%s : %d Can not open the device node.</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">__func__</span><span class="p">,</span> <span class="n">__LINE__</span><span class="p">);</span>
+            <span class="k">continue</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+
+</code></pre>
+</div>
+<ul>
+  <li>创建了两个线程，下面来看一下这两个线程分别做了什么事</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><pre class="highlight"><code>    <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ntid</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">)</span><span class="n">init_OS_fn</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="cm">/* pthread_create(&amp;first_time_boot_id, NULL, (void*)keymaster_first_time_fn, NULL); */</span>
+    <span class="cm">/* create a thread for start data area working */</span>
+    <span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">loadtee_id</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">)</span><span class="n">loadtee_fn</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+
+</code></pre>
+</div>
+<p>　　先来看一下init_OS_fn这个函数做了什么？它主要调用了init_TEEI_OS，并设置了相关的属性值.init_TEEI_OS中主要对/dev/teei_config做了相关的操作，底层主要是初始化了一些锁，申请相关的内存空间，用于后面加载teei os</p>
+
+<div class="language-c highlighter-rouge"><pre class="highlight"><code>    <span class="k">static</span> <span class="kt">int</span> <span class="nf">init_OS_fn</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">ret</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">IMSG_INFO</span><span class="p">(</span><span class="s">"begin to init TEEI OS"</span><span class="p">);</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">init_TEEI_OS</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">ret</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">property_set</span><span class="p">(</span><span class="s">"soter.teei.init"</span><span class="p">,</span> <span class="s">"INIT_OK"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+    <span class="k">static</span> <span class="kt">int</span> <span class="nf">init_TEEI_OS</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">fd</span> <span class="o">=</span> <span class="n">open</span><span class="p">(</span><span class="s">"/dev/teei_config"</span><span class="p">,</span> <span class="n">O_RDWR</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">flag</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">ioctl</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">TEEI_CONFIG_IOCTL_INIT_TEEI</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">flag</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="mi">0</span> <span class="o">!=</span> <span class="n">ret</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">IMSG_ERROR</span><span class="p">(</span><span class="s">"Can not init Soter OS ,please fix it ret = %d !"</span><span class="p">,</span> <span class="n">ret</span><span class="p">);</span>
+
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">IMSG_INFO</span><span class="p">(</span><span class="s">"begin to init TEEI OS OK flag = %d"</span><span class="p">,</span> <span class="n">flag</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+</code></pre>
+</div>
+
+<p>　　再来看看loadtee_fn这个函数：1、loadtee_fn首先获取了ro.crypto.state和ro.crypto.type这两个属性值，关于这两个属性的配置是在init进程中，执行do_mount_all时，通过读取fstab文件进行设置的。所以在teei_daemon执行时，需要对其进行解密；2、将table数组中定义的一些文件拷贝至指定的位置，跳转到table这个二维数组里，都是alipayapp等相关的TA(可信应用)拷贝到/data/thh/目录下</p>
+
+<div class="language-c highlighter-rouge"><pre class="highlight"><code>    <span class="k">static</span> <span class="kt">int</span> <span class="nf">loadtee_fn</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">IMSG_INFO</span><span class="p">(</span><span class="s">"running in loadtee_fn."</span><span class="p">);</span>
+
+    <span class="kt">char</span> <span class="n">value</span><span class="p">[</span><span class="n">PROPERTY_VALUE_MAX</span><span class="p">];</span>
+    <span class="kt">char</span> <span class="n">value_type</span><span class="p">[</span><span class="n">PROPERTY_VALUE_MAX</span><span class="p">];</span>
+    <span class="kt">char</span> <span class="n">value_state</span><span class="p">[</span><span class="n">PROPERTY_VALUE_MAX</span><span class="p">];</span>
+    <span class="n">property_get</span><span class="p">(</span><span class="s">"ro.crypto.state"</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="s">""</span><span class="p">);</span>
+    <span class="n">property_get</span><span class="p">(</span><span class="s">"ro.crypto.type"</span><span class="p">,</span> <span class="n">value_type</span><span class="p">,</span> <span class="s">""</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">strcmp</span><span class="p">(</span><span class="s">"unencrypted"</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">strcmp</span><span class="p">(</span><span class="s">"unsupported"</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="cm">/*data encrypted, wait for decrption.*/</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">strcmp</span><span class="p">(</span><span class="s">"file"</span><span class="p">,</span> <span class="n">value_type</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">property_get</span><span class="p">(</span><span class="s">"vold.decrypt"</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="s">""</span><span class="p">);</span>
+            <span class="k">while</span> <span class="p">(</span><span class="n">strcmp</span><span class="p">(</span><span class="s">"trigger_restart_framework"</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="cm">/*still decrypting... wait one second.*/</span>
+                <span class="n">usleep</span><span class="p">(</span><span class="mi">10000</span><span class="p">);</span>
+                <span class="n">property_get</span><span class="p">(</span><span class="s">"vold.decrypt"</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="s">""</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">property_get</span><span class="p">(</span><span class="s">"soter.teei.state"</span><span class="p">,</span> <span class="n">value_state</span><span class="p">,</span> <span class="s">""</span><span class="p">);</span>
+
+    <span class="k">while</span><span class="p">(</span><span class="n">strcmp</span><span class="p">(</span><span class="s">"OK"</span><span class="p">,</span> <span class="n">value_state</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="cm">/*still decrypting... wait one second.*/</span>
+        <span class="n">usleep</span><span class="p">(</span><span class="mi">10000</span><span class="p">);</span>
+        <span class="n">property_get</span><span class="p">(</span><span class="s">"soter.teei.state"</span><span class="p">,</span> <span class="n">value_state</span><span class="p">,</span> <span class="s">""</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">IMSG_INFO</span><span class="p">(</span><span class="s">"create tee storage ..."</span><span class="p">);</span>
+    <span class="cm">/*create_tee_storage(table[0],0);*/</span>
+    <span class="n">create_tee_storage</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+    <span class="n">create_tee_storage</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+    <span class="n">create_tee_storage</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+    <span class="n">create_tee_storage</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="mi">4</span><span class="p">]);</span>
+    <span class="n">create_tee_storage</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="mi">5</span><span class="p">]);</span>
+    <span class="n">create_tee_storage</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="mi">6</span><span class="p">]);</span>
+    <span class="n">create_tee_storage</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="mi">7</span><span class="p">]);</span>
+    <span class="n">create_tee_storage</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="mi">8</span><span class="p">]);</span>
+    <span class="n">create_tee_storage</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="mi">9</span><span class="p">]);</span>
+    <span class="n">create_tee_storage</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="mi">10</span><span class="p">]);</span>
+    <span class="n">create_tee_storage</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="mi">11</span><span class="p">]);</span>
+    <span class="n">create_tee_storage</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="mi">12</span><span class="p">]);</span>
+    <span class="n">create_tee_storage</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="mi">13</span><span class="p">]);</span>
+    <span class="n">create_tee_storage</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="mi">14</span><span class="p">]);</span>
+    <span class="n">create_tee_storage</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="mi">15</span><span class="p">]);</span>
+    <span class="n">keymaster_unlock</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+
+</code></pre>
+</div>
+<p>　　再来看一下keymaster_unlock这个函数，函数也很简单，打开/dev/teei_config这个设备节点，之后使用ioctl函数写入命令</p>
+
+<div class="language-c highlighter-rouge"><pre class="highlight"><code><span class="k">static</span> <span class="kt">void</span> <span class="nf">keymaster_unlock</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">fd</span> <span class="o">=</span> <span class="n">open</span><span class="p">(</span><span class="s">"/dev/teei_config"</span><span class="p">,</span> <span class="n">O_RDWR</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">flag</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">ioctl</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">TEEI_CONFIG_IOCTL_UNLOCK</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">flag</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="mi">0</span> <span class="o">!=</span> <span class="n">ret</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">IMSG_ERROR</span><span class="p">(</span><span class="s">"keymaster unlock boot_decrypt_lock failed !"</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">IMSG_INFO</span><span class="p">(</span><span class="s">"unlock boot_decrypt_lock success"</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+<span class="p">}</span>
+
+</code></pre>
+</div>
+<p>　　底层驱动里面对于ioctl这个cmd做了什么呢？很简单，只是调用了up释放了boot_decryto_lock这个互斥量。而在上面说的的init_TEEI_OS函数中对初始化的<code class="highlighter-rouge">init_teei_framework</code> ，通过ioctl加载了相关的TA之后，通过TEEI_CONFIG_IOCTL_UNLOCK这个cmd，之后便可加载相关的teei os，当然啦，这部分基本都是不开源的，之后，相关的TEE OS就起来了。</p>
+
+<div class="language-c highlighter-rouge"><pre class="highlight"><code><span class="k">static</span> <span class="kt">long</span> <span class="nf">teei_config_ioctl</span><span class="p">(</span><span class="k">struct</span> <span class="n">file</span> <span class="o">*</span><span class="n">file</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">cmd</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">arg</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">retVal</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">switch</span> <span class="p">(</span><span class="n">cmd</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="k">case</span> <span class="n">TEEI_CONFIG_IOCTL_INIT_TEEI</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">teei_flags</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">break</span><span class="p">;</span>
+
+        <span class="n">retVal</span> <span class="o">=</span> <span class="n">init_teei_framework</span><span class="p">();</span>
+        <span class="n">TEEI_BOOT_FOOTPRINT</span><span class="p">((</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="n">teei_boot_error_to_string</span><span class="p">(</span><span class="n">retVal</span><span class="p">));</span>
+        <span class="n">teei_flags</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="n">TEEI_CONFIG_IOCTL_UNLOCK</span><span class="p">:</span>
+        <span class="n">up</span><span class="p">(</span><span class="o">&amp;</span><span class="p">(</span><span class="n">boot_decryto_lock</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+
+    <span class="nl">default:</span>
+        <span class="n">IMSG_ERROR</span><span class="p">(</span><span class="s">"[%s][%d] command not found!</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">__func__</span><span class="p">,</span> <span class="n">__LINE__</span><span class="p">);</span>
+        <span class="n">retVal</span> <span class="o">=</span> <span class="o">-</span><span class="n">EINVAL</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">retVal</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre>
+</div>
+
+<div class="language-c highlighter-rouge"><pre class="highlight"><code>    <span class="n">down</span><span class="p">(</span><span class="o">&amp;</span><span class="n">boot_decryto_lock</span><span class="p">);</span>
+    <span class="n">up</span><span class="p">(</span><span class="o">&amp;</span><span class="n">boot_decryto_lock</span><span class="p">);</span>
+    <span class="n">TEEI_BOOT_FOOTPRINT</span><span class="p">(</span><span class="s">"TEEI BOOT Decrypt Unlocked"</span><span class="p">);</span>
+
+    <span class="n">retVal</span> <span class="o">=</span> <span class="n">teei_service_init_second</span><span class="p">();</span>
+    <span class="n">TEEI_BOOT_FOOTPRINT</span><span class="p">(</span><span class="s">"TEEI BOOT Service2 Inited"</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">retVal</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">TEEI_BOOT_ERROR_INIT_SERVICE2_FAILED</span><span class="p">;</span>
+
+    <span class="n">t_os_load_image</span><span class="p">();</span>
+    <span class="n">TEEI_BOOT_FOOTPRINT</span><span class="p">(</span><span class="s">"TEEI BOOT Load TEES Completed"</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">soter_error_flag</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">TEEI_BOOT_ERROR_LOAD_TA_FAILED</span><span class="p">;</span>
+
+    <span class="n">teei_config_flag</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">complete</span><span class="p">(</span><span class="o">&amp;</span><span class="n">global_down_lock</span><span class="p">);</span>
+    <span class="n">wake_up</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__fp_open_wq</span><span class="p">);</span>
+    <span class="n">TEEI_BOOT_FOOTPRINT</span><span class="p">(</span><span class="s">"TEEI BOOT All Completed"</span><span class="p">);</span>
+
+</code></pre>
+</div>
+<p>　　之后调用set_task_capability函数，给普通用户设置相应的capabilities。让teei_daemon在不是root权限下也能正常的运行。</p>
+
+<div class="language-c highlighter-rouge"><pre class="highlight"><code><span class="k">static</span> <span class="kt">int</span> <span class="nf">set_task_capability</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">stat</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">ret</span><span class="p">;</span>
+    <span class="n">cap_value_t</span> <span class="n">capList</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="n">CAP_DAC_OVERRIDE</span><span class="p">,</span> <span class="n">CAP_SYS_RAWIO</span><span class="p">,</span> <span class="n">CAP_SETUID</span><span class="p">,</span> <span class="n">CAP_SETGID</span><span class="p">,</span> <span class="n">CAP_SETPCAP</span><span class="p">,</span> <span class="n">CAP_SYS_ADMIN</span> <span class="p">}</span> <span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="n">num_caps</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+
+    <span class="n">get_allkinds_uid</span><span class="p">();</span>
+    <span class="n">stat</span> <span class="o">=</span> <span class="n">setuid</span><span class="p">(</span><span class="n">geteuid</span><span class="p">());</span>
+    <span class="n">pid_t</span> <span class="n">parentPid</span> <span class="o">=</span> <span class="n">getpid</span><span class="p">();</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">parentPid</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">IMSG_ERROR</span><span class="p">(</span><span class="s">"Can not get task pid!</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">cap_t</span> <span class="n">caps</span> <span class="o">=</span> <span class="n">cap_init</span><span class="p">();</span>
+
+    <span class="n">cap_set_flag</span><span class="p">(</span><span class="n">caps</span><span class="p">,</span> <span class="n">CAP_EFFECTIVE</span><span class="p">,</span> <span class="n">num_caps</span><span class="p">,</span> <span class="n">capList</span><span class="p">,</span> <span class="n">CAP_SET</span><span class="p">);</span>
+    <span class="n">cap_set_flag</span><span class="p">(</span><span class="n">caps</span><span class="p">,</span> <span class="n">CAP_INHERITABLE</span><span class="p">,</span> <span class="n">num_caps</span><span class="p">,</span> <span class="n">capList</span><span class="p">,</span> <span class="n">CAP_SET</span><span class="p">);</span>
+    <span class="n">cap_set_flag</span><span class="p">(</span><span class="n">caps</span><span class="p">,</span> <span class="n">CAP_PERMITTED</span><span class="p">,</span> <span class="n">num_caps</span><span class="p">,</span> <span class="n">capList</span><span class="p">,</span> <span class="n">CAP_SET</span><span class="p">);</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">cap_set_proc</span><span class="p">(</span><span class="n">caps</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">IMSG_ERROR</span><span class="p">(</span><span class="s">"capset() failed! error code %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">ret</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">EXIT_FAILURE</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">listCaps</span><span class="p">();</span>
+
+    <span class="cm">/* cap_free(caps); */</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>　　最后从/dev/tz_vfs节点读取数据，存入rw_buffer，之后调用analysis_command解析命令，执行不同的操作</p>
+
+<div class="language-cpp highlighter-rouge"><pre class="highlight"><code>    <span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">len</span> <span class="o">=</span> <span class="mi">31232</span><span class="p">;</span>
+        <span class="n">len</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">vfs_fd</span><span class="p">,</span> <span class="n">rw_buffer</span><span class="p">,</span> <span class="n">BUFFER_SIZE</span><span class="p">);</span>
+        <span class="n">IMSG_DEBUG</span><span class="p">(</span><span class="s">"%s : %d read result = %d.</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">__func__</span><span class="p">,</span> <span class="n">__LINE__</span><span class="p">,</span> <span class="n">len</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">len</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">IMSG_ERROR</span><span class="p">(</span><span class="s">"%s : %d Can not read the VFS device node, len = [%d] ret = [%d]. Wait for 1s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span>
+                 <span class="n">__func__</span><span class="p">,</span> <span class="n">__LINE__</span><span class="p">,</span> <span class="n">len</span><span class="p">,</span> <span class="n">errno</span><span class="p">);</span>
+            <span class="n">usleep</span><span class="p">(</span><span class="mi">10000</span><span class="p">);</span>
+            <span class="k">continue</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">retVal</span> <span class="o">=</span> <span class="n">analysis_command</span><span class="p">(</span><span class="n">rw_buffer</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">retVal</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">IMSG_ERROR</span><span class="p">(</span><span class="s">"%s : %d Invail command read from VFS device node.</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">__func__</span><span class="p">,</span> <span class="n">__LINE__</span><span class="p">);</span>
+            <span class="k">continue</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">writeLen</span> <span class="o">=</span> <span class="n">retVal</span><span class="p">;</span>
+        <span class="n">retVal</span> <span class="o">=</span> <span class="n">write</span><span class="p">(</span><span class="n">vfs_fd</span><span class="p">,</span> <span class="n">rw_buffer</span><span class="p">,</span> <span class="n">writeLen</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">retVal</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">IMSG_ERROR</span><span class="p">(</span><span class="s">"%s : %d Can not write to VFS device node.</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">__func__</span><span class="p">,</span> <span class="n">__LINE__</span><span class="p">);</span>
+            <span class="k">continue</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+</code></pre>
+</div>
+
+<h2 id="总结">总结</h2>
+<p>从上文的分析，teei_daemon通过init.rc启动作为一个service，然后加载相关的TA和teei os。维护这部分的代码可能会修改相关的属性名称，所以我们在使用时，也要注意配置相关的属性值，当然，关于具体teei_daemon实现的操作细节还需在底层去深究 。</p>
+
+
+    </article>
+    <div class="share">
+      <div class="share-component"></div>
+    </div>
+    <div class="comment">
+      
+
+  
+    <a href="#" class="show_disqus_comment" onclick="return false;">Show Disqus Comments</a>
+    <div id="disqus_thread"></div>
+    <script>
+    var disqus_config = function () {
+        this.page.url = 'http://localhost:4000/2017/09/23/17-34-20-teei_daemon/';
+        this.page.identifier = '/2017/09/23/17-34-20-teei_daemon/';
+        this.page.title = '再谈原型和继承';
+    };
+    var disqus_loaded = false;
+    $(function() {
+        $('.show_disqus_comment').on('click', function() { // DON'T EDIT BELOW THIS LINE
+            $(this).html('加载中...');
+            var that = this;
+            if (!disqus_loaded) {
+                var d = document, s = d.createElement('script');
+
+                s.type = 'text/javascript';
+                s.async = true;
+                var shortname = 'ctwillson';
+
+                s.src = '//' + shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+
+                disqus_loaded = true;
+            }
+            $(that).remove();
+        })
+    })
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+  
+
+  
+        <div id="gitalk-container"></div>
+        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+        <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+        <script>
+        var gitalk = new Gitalk({
+            id: '/2017/09/23/17-34-20-teei_daemon/',
+            clientID: 'd2e1cbbd298958076462',
+            clientSecret: 'b42a4178e5fd4a7cf63189ef4b1453b05c375709',
+            repo: 'blog-comments',
+            owner: 'ctwillson',
+            admin: ['ctwillson'],
+            labels: ['gitment'],
+            perPage: 50,
+        })
+        gitalk.render('gitalk-container')
+        </script>
+  
+
+
+    </div>
+  </div>
+  <div class="column one-fourth">
+    
+<h3>Search</h3>
+<div id="site_search">
+    <input type="text" id="search_box" placeholder="Search">
+    <button class="btn btn-default" id="site_search_do"><span class="octicon octicon-search"></span></button>
+</div>
+
+<ul id="search_results"></ul>
+
+<link rel="stylesheet" type="text/css" href="http://localhost:4000/assets/css/modules/sidebar-search.css">
+<script src="http://localhost:4000/assets/js/lunr.min.js"></script>
+<script src="http://localhost:4000/assets/js/search.js"></script>
+
+
+    
+
+    
+<h3 class="post-directory-title mobile-hidden">Table of Contents</h3>
+<div id="post-directory-module" class="mobile-hidden">
+  <section class="post-directory">
+  <!-- Links that trigger the jumping -->
+  <!-- Added by javascript below -->
+  <dl></dl>
+  </section>
+</div>
+
+<script src="http://localhost:4000/assets/js/jquery.toc.js"></script>
+
+  </div>
+</div>
+</section>
+<!-- /section.content -->
+
+    <footer class="container">
+        <div class="site-footer" role="contentinfo">
+            <div class="copyright left mobile-block">
+                    © 2015
+                    <span title="ctwillson">ctwillson</span>
+                    <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a>
+            </div>
+
+            <ul class="site-footer-links right mobile-hidden">
+                <li>
+                    <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+                </li>
+            </ul>
+            <a href="http://github.com/ctwillson/ctwillson.github.io" target="_blank" aria-label="view source code">
+                <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+            </a>
+            <ul class="site-footer-links mobile-hidden">
+                
+                <li>
+                    <a href="/" title="首页" target="">首页</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/" title="分类" target="">分类</a>
+                </li>
+                
+                <li>
+                    <a href="/wiki/" title="维基" target="">维基</a>
+                </li>
+                
+                <li>
+                    <a href="/links/" title="链接" target="">链接</a>
+                </li>
+                
+                <li>
+                    <a href="/about/" title="关于" target="">关于</a>
+                </li>
+                
+                <li><a href="/feed.xml"><span class="octicon octicon-rss" style="color:orange;"></span></a></li>
+            </ul>
+
+        </div>
+    </footer>
+    <!-- / footer -->
+    <script src="http://localhost:4000/assets/vendor/share.js/dist/js/share.min.js"></script>
+    <script src="http://localhost:4000/assets/js/geopattern.js"></script>
+    <script src="http://localhost:4000/assets/js/prism.js"></script>
+    <link rel="stylesheet" href="http://localhost:4000/assets/css/globals/prism.css">
+    <script>
+      jQuery(document).ready(function($) {
+        // geopattern
+        $('.geopattern').each(function(){
+          $(this).geopattern($(this).data('pattern-id'));
+        });
+       // hljs.initHighlightingOnLoad();
+      });
+    </script>
+    
+    <div style="display:none">
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-80669434-1', 'auto');
+        ga('send', 'pageview');
+
+      </script>
+    </div>
+    
+</body>
+</html>

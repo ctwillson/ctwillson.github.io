@@ -1,6 +1,6 @@
 - sitename: GitHub
-  name: mzlogin
-  url: https://github.com/mzlogin
+  name: ctwillson
+  url: https://github.com/ctwillson
 
 - sitename: 掘金
   name: mzlogin
@@ -10,17 +10,17 @@
   name: mazhuang
   url: https://www.linkedin.com/in/mazhuang
 
-- sitename: 博客
-  name: 码志
-  url: http://mazhuang.org
+- sitename: CSDN博客
+  name: 多次拒绝刘亦菲
+  url: http://blog.csdn.net/ctwillson
 
 - sitename: 微博
-  name: mzlogin
-  url: http://weibo.com/mzlogin
+  name: 多次拒绝刘亦菲
+  url: http://weibo.com/zuichenan
 
 - sitename: 知乎
-  name: mzlogin
-  url: http://www.zhihu.com/people/mzlogin
+  name: 多次拒绝刘亦菲
+  url: zhihu.com/people/duo-ci-ju-jue-liu-yi-fei
 
 - sitename: 豆瓣
   name: 壮哥不胖
