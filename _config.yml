@@ -2,7 +2,7 @@
 #   Main Configs   #
 # ---------------- #
 baseurl:
-url: http://hooltech.com
+#url: http://hooltech.com
 date_format: "ordinal"
 title: ctwillson
 subtitle: "人生苦短，别当码农"
