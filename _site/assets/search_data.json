@@ -1,5 +1,11 @@
 {
   
+  "2017-10-30-novel": {
+    "title": "人工智能、AI、AR、VR浅谈",
+    "url": " /2017/10/30/novel/",
+    "category": "杂谈科普"
+  },
+  
   "2017-10-16-mtp-22-26-1": {
     "title": "Android mtp 流程分析及移植",
     "url": " /2017/10/16/mtp-22-26-1/",
@@ -80,6 +86,12 @@
     "title": "Android mtp 流程分析及移植",
     "url": "/2017/10/16/mtp-22-26-1/",
     "category": "[&quot;Android&quot;]"
+  },
+  
+  "2017-10-30-novel": {
+    "title": "人工智能、AI、AR、VR浅谈",
+    "url": "/2017/10/30/novel/",
+    "category": "[&quot;杂谈科普&quot;]"
   },
   
   "wiki-android-studio": {

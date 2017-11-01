@@ -1,4 +1,58 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-10-17T20:17:59+08:00</updated><id>http://localhost:4000/</id><title type="html">ctwillson</title><subtitle>ctwillson的个人博客</subtitle><author><name>ctwillson</name></author><entry><title type="html">Android mtp 流程分析及移植</title><link href="http://localhost:4000/2017/10/16/mtp-22-26-1/" rel="alternate" type="text/html" title="Android mtp 流程分析及移植" /><published>2017-10-16T00:00:00+08:00</published><updated>2017-10-16T00:00:00+08:00</updated><id>http://localhost:4000/2017/10/16/mtp-22-26-1</id><content type="html" xml:base="http://localhost:4000/2017/10/16/mtp-22-26-1/">&lt;h2 id=&quot;mtp简介&quot;&gt;mtp简介&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-10-31T22:06:55+08:00</updated><id>http://localhost:4000/</id><title type="html">ctwillson</title><subtitle>ctwillson的个人博客</subtitle><author><name>ctwillson</name></author><entry><title type="html">人工智能、AI、AR、VR浅谈</title><link href="http://localhost:4000/2017/10/30/novel/" rel="alternate" type="text/html" title="人工智能、AI、AR、VR浅谈" /><published>2017-10-30T00:00:00+08:00</published><updated>2017-10-30T00:00:00+08:00</updated><id>http://localhost:4000/2017/10/30/novel</id><content type="html" xml:base="http://localhost:4000/2017/10/30/novel/">&lt;h2 id=&quot;前言&quot;&gt;前言&lt;/h2&gt;
+&lt;p&gt;如果被问到2017年，上科技新闻最火热的关键词是什么，莫非要数文章的标题，人工智能、AI、AR、VR一堆的名字犹如火山爆发般袭来，这些看似高大上的东西，真的就犹如名字般让咱们平民望而却步吗？本文就从这里开始分析，慢慢揭开她们的面纱，脱下她们的伪装。。。&lt;/p&gt;
+&lt;h2 id=&quot;概述&quot;&gt;概述&lt;/h2&gt;
+
+&lt;h3 id=&quot;vr&quot;&gt;VR&lt;/h3&gt;
+
+&lt;h4 id=&quot;简介&quot;&gt;简介&lt;/h4&gt;
+&lt;p&gt;咱们先从进行消费电子最早的VR开始说起,先说点专业点的东西。VR，又称为虚拟现世。虚拟现实技术是一种可以创建和体验虚拟世界的计算机仿真系统，它利用计算机生成一种模拟环境，是一种多源信息融合的、交互式的三维动态视景和实体行为的系统仿真使用户沉浸到该环境中。
+说白了，就是让你置身于一个科幻世界一般，有种生临其境的感觉。我们在很多科幻电影中总会看到，主角们突然打开了什么仪器，就仿佛进入到另外一个世界一般。那现世世界中的表现又是什么呢？其实主要的表现就是ＶＲ眼睛等一系列设备，这些市面上的ＶＲ眼镜通过对视觉的模拟，给人一种身临其境的感觉，所以目前的ＶＲ当然没有影片里面来的夸张，未来，也不知道能否发展到不用给用户佩戴设备，达到ＶＲ的效果才是下一次的科技革命。&lt;/p&gt;
+&lt;h4 id=&quot;实现原理&quot;&gt;实现原理&lt;/h4&gt;
+&lt;p&gt;说的这么夸张，能够模拟虚拟现实，听起来真是高大上，那它的实现原理是否很复杂？其实不尽然。
+最简单的设备&lt;strong&gt;一部手机&lt;/strong&gt;，&lt;strong&gt;两个球形镜片&lt;/strong&gt;，&lt;strong&gt;一部VR电影&lt;/strong&gt;就可以实现虚拟现实的效果了，是不是很简单？球形镜片主要负责视觉上制造球形视野，一部VR电影负责虚拟现实的实现效果，手机中的陀螺仪负责检测人的头像的转动，这样子陀螺仪检测的人头像的转动，将数据发送给视频，然后移动图像，就可以初步实现VR的视觉效果了。&lt;/p&gt;
+&lt;h4 id=&quot;vr设备&quot;&gt;VR设备&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&quot;/images/blog/vr/vr_1.png&quot; alt=&quot;&quot; /&gt;
+&lt;img src=&quot;/images/blog/vr/vr_2.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;来搜一搜淘宝的VR眼镜，一看，便宜的几十块，贵的几千块，是不是国企良心了？哈哈哈，其实并不是这样子，我们市面上看到的几十块的号称VR的其实就是上面所说的简单设备，你购买的设备其实就是一幅简简单单的球形镜片而已，手机端通过陀螺仪检测头部晃动，配合VR视频就可以实现了。那HTC vive之类的设备呢？从设备的搭载就可以知道了，vive还必须搭配电脑使用，主要原因，手机端的处理性能太弱了。另外除了视觉上的VR体验，交互也是一部分，vive的使用无需使用手机的陀螺仪，相关的传感器都集中在了头盔部分，同时支持激光定位，这样子，人体的移动就是被检测到，手柄的加入又可以加入人体操作带来的反馈，vive PSVR是目前比较火热的VR设备，有兴趣的小伙伴可以去体验一下。&lt;/p&gt;
+&lt;h4 id=&quot;vr的局限&quot;&gt;VR的局限&lt;/h4&gt;
+&lt;p&gt;那么VR设备的发展前景怎么，其实目前还有很多的局限性，需要较为繁多的设备链接，带来的体验并不好，希望未来能够实现裸眼VR。另外一个，视频、游戏资源是制约VR的另一个问题，除了硬件厂商的跟进，VR也需要软件厂商开发更多的VR资源来获得更佳的体验效果&lt;/p&gt;
+
+&lt;h3 id=&quot;ar&quot;&gt;AR&lt;/h3&gt;
+&lt;h4 id=&quot;简介-1&quot;&gt;简介&lt;/h4&gt;
+&lt;p&gt;增强现实技术（Augmented Reality，简称 AR），是一种实时地计算摄影机影像的位置及角度并加上相应图像、视频、3D模型的技术，这种技术的目标是在屏幕上把虚拟世界套在现实世界并进行互动。这种技术1990年提出。随着随身电子产品CPU运算能力的提升，预期增强现实的用途将会越来越广。
+移动端的消费电子，最近火热的就是ios 11以及Android O带来的ARkit，即AR应用相关的接口。开发者们可以通过相关的接口实现相应的AR应用&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/blog/vr/ar_1.gif&quot; alt=&quot;iPhone拍摄的AR视频&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;实现原理-1&quot;&gt;实现原理&lt;/h4&gt;
+&lt;p&gt;比较系统性的AR实现原理，可以参考&lt;a href=&quot;http://www.arinchina.com/article-5777-1.html&quot;&gt;AR的基本原理科普&lt;/a&gt;，那这篇文章是写给入门小白的，这里较为深的层次的原理分析就不深究了。目前呢，基本通过屏幕上呈现出不同的视觉效果，之前火热的Pokemon Go其实就是AR的一种表现。通过摄像头采集的数据，发送给GPU进行不同的渲染，实现了不一样的视觉效果通过协处理器，可以达到不同的交互方式。开发者在这一块，只需要关注ARkit相关的接口，就可以个性化功能了。整个技术中，最为难的就是如何提高AR的渲染速度，和对AR这部分接口进行标准化的封装，如何正确去处理相关的AR视觉操作，都是很高深的东西，当然，作为应用开发者已经不需要关注这部分，苹果和谷歌都已经帮你完成了。&lt;/p&gt;
+&lt;h4 id=&quot;ar设备&quot;&gt;AR设备&lt;/h4&gt;
+&lt;p&gt;其实系统支持了Android O以及IOS 11都可以支持相关的AR功能了，也可以去下载Pokemon Go初步体验AR带来的效果，当然啦，要去体验系统自身带来的AR体验，不但需要系统支持，厂商支持，硬件支持也同样重要，目前IOS设备A9处理器及以上升级到IOS 11便可体验AR带来的趣味&lt;/p&gt;
+&lt;h4 id=&quot;ar的局限&quot;&gt;AR的局限&lt;/h4&gt;
+&lt;p&gt;同VR，生态也是制约AR的一个重大因素，如何让开发者投入到AR的开发从而有更多优秀的AR应用是需要苹果谷歌所需要面临的问题，同时AR需要强大的硬件支持，然而耗电量也是AR不得不面对的问题&lt;/p&gt;
+&lt;h3 id=&quot;人工智能ai&quot;&gt;人工智能、AI&lt;/h3&gt;
+&lt;h4 id=&quot;简介-2&quot;&gt;简介&lt;/h4&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;人工智能（Artificial Intelligence），英文缩写为AI。它是研究、开发用于模拟、延伸和扩展人的智能的理论、方法、技术及应用系统的一门新的技术科学。人工智能可以对人的意识、思维的信息过程的模拟。人工智能不是人的智能，但能像人那样思考、也可能超过人的智能。&lt;/code&gt;
+上面是一段来自百度百科的介绍，其实人工智能从名字上也很好理解，人工制造出来的智能机器，可以让机器像人类一样去思考，去理解。当然这还是很美好的愿景，当前的技术还远未达到这么先进。来看看前段时间最火热的阿法狗，它将人工智能这个概念成功的带入了大众的视野，以及到目前的消费电子里面的iPhone 8、华为mate 10所说的人工智能，其实看一下，机器真的实现了人工智能了吗？可以像人类一样去思考了吗？其实并不是这样的，那现在鼓吹的人工智能难道是一无是处吗？我们继续往下看&lt;/p&gt;
+&lt;h4 id=&quot;实现原理-2&quot;&gt;实现原理&lt;/h4&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;自然语言处理，知识表现，智能搜索，推理，规划，机器学习，知识获取，组合调度问题，感知问题，模式识别，逻辑程序设计软计算，不精确和不确定的管理，人工生命，神经网络，复杂系统，遗传算法&lt;/code&gt;
+呼～一看百度的介绍，又不得不说再次被吓到了，对于咱们小白来说，这些名词总感觉那么高大上。其实，对于第三方的开发者来说，想要开发一些人工智能的基础软件还是挺简单的。
+举例来说：人脸识别
+关于人脸识别，概念上说，让计算机认得出你的人脸。那这部分的实现其实也很简单
+取特征点-&amp;gt;保存-&amp;gt;读取摄像头数据-&amp;gt;取特征点-&amp;gt;比对识别
+这已经算是人工智能的范畴了，而想要识别这一套却并不难，借助matlab和opencv之类的工具，还是较为容易
+那如何更为智能呢？让机器去学习呢
+其实这里面实现的原理也很简单，将识别准确的数据保存下来，识别不准备的数据从库里面剔除，这样子我们的库所能提供的数据的特征是不是就越发的准确了呢？想想，所谓的机器学习原理竟如此的简单。
+说到这里，很多人可能决定原来所谓的人工智能原来这么简单，其实也不尽然。上面举得例子，不知大家有没有注意到，关于识别的算法这部分是用别人提供的，如何提高这部分的识别速率以及准确性？同时，识别的数据中，对于特征点的选取，保存在库中的数据如何让其更为精准，等等都是那些大牛所研究的对象，所以在座的如果还是在学生时期，或者准备系统性学习这一块东西的人，还是好好专研下数学，学习下算法吧。而吾等码农，只不过是借用了他们的轮子进行了二次开发而已。&lt;/p&gt;
+
+&lt;h3 id=&quot;代码实现&quot;&gt;代码实现&lt;/h3&gt;
+&lt;p&gt;之前做了一个人脸识别的demo，目前已经上传至github，有兴趣的点击 &lt;a href=&quot;https://github.com/ctwillson/face_rec&quot;&gt;点我点我&lt;/a&gt;
+vs平台，opencv 2.x即可用了，有讨论的欢迎给我留言&lt;/p&gt;
+
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+
+&lt;p&gt;全文分析下来，科技圈吹得天花乱坠的概念并没有想象中那么遥远，对于这一块的爱好者，尽管大胆的去尝试。当然全文谈的只是小白的入门文章而已，里面涉及的东西远比想象中来的困难，对于数学的要求也绝非停留在大学上的高等数学上，当然这已经不是吾等码农所关心的事了。&lt;/p&gt;</content><author><name>ctwillson</name></author><summary type="html">前言 如果被问到2017年，上科技新闻最火热的关键词是什么，莫非要数文章的标题，人工智能、AI、AR、VR一堆的名字犹如火山爆发般袭来，这些看似高大上的东西，真的就犹如名字般让咱们平民望而却步吗？本文就从这里开始分析，慢慢揭开她们的面纱，脱下她们的伪装。。。 概述</summary></entry><entry><title type="html">Android mtp 流程分析及移植</title><link href="http://localhost:4000/2017/10/16/mtp-22-26-1/" rel="alternate" type="text/html" title="Android mtp 流程分析及移植" /><published>2017-10-16T00:00:00+08:00</published><updated>2017-10-16T00:00:00+08:00</updated><id>http://localhost:4000/2017/10/16/mtp-22-26-1</id><content type="html" xml:base="http://localhost:4000/2017/10/16/mtp-22-26-1/">&lt;h2 id=&quot;mtp简介&quot;&gt;mtp简介&lt;/h2&gt;
 &lt;p&gt;MTP，全称是Media Transfer Protocol（媒体传输协议）。它是微软的一个为计算机和便携式设备之间传输图像、音乐等所定制的协议。&lt;/p&gt;
 
 &lt;p&gt;Android从3.0开始支持MTP。MTP的应用分两种角色，一个是作为Initiator，另一个作为Responder。以”Android平板电脑”连接”PC”为例，他们的关系如图所示。&lt;/p&gt;
