@@ -17,7 +17,8 @@ keywords:
 	__platform_driver_register(drv, THIS_MODULE)
 ```
 
-- __platform_driver_register 函数（drivers/base/platform.c），填充了 drv->driver 这个结构体
+- `__platform_driver_register` 函数（drivers/base/platform.c），填充了 drv->driver 这个结构体
+
 ```
 int __platform_driver_register(struct platform_driver *drv,
 				struct module *owner)
