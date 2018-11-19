@@ -62,6 +62,8 @@ highlighter: rouge
 paginate: 8
 lsi: false
 quiet: false
+mermaid:
+  src: 'path/to/mermaid.js'
 excerpt_separator: "\n\n"
 permalink: /:year/:month/:day/:title/
 gems:
@@ -72,6 +74,7 @@ gems:
     - jekyll-sitemap
     - jekyll-feed
     - jemoji
+    - jekyll-mermaid
 #     - jekyll-mentions
 collections:
     wiki:
