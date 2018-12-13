@@ -27,6 +27,8 @@ dts 如此繁多的节点，device 设备又是在什么时候注册的？带着
 关于平台设备创建，路径在 drivers/of/platform.c，主要做了两件事：
 - 处理 reserved-memory 节点，然后为子节点中的 ramoops 创建 device 设备
 - 调用 of_platform_default_populate 创建子节点
+
+
 ```c
 static int __init of_platform_default_populate_init(void)
 {
@@ -53,7 +55,9 @@ static int __init of_platform_default_populate_init(void)
 }
 arch_initcall_sync(of_platform_default_populate_init);
 ```
+
 of_platform_default_populate 调用了 of_platform_populate，这里需要先注意到 of_default_bus_match_table 这个结构体
+
 ```c
 
 const struct of_device_id of_default_bus_match_table[] = {
@@ -75,6 +79,7 @@ int of_platform_default_populate(struct device_node *root,
 }
 
 ```
+
 再来看一下 of_platform_populate，主要遍历的是根节点的第一级子节点，关键函数 of_platform_bus_create
 
 ```c
@@ -107,6 +112,7 @@ int of_platform_populate(struct device_node *root,
     return rc;
 }
 ```
+
 关于 dts 中的哪些节点要注册为 platform_device 的控制逻辑全部都在这里了，通过递归，一层层的创建子 node，以及子 node 的 node...,那么哪些是要注册进的呢？从代码中可以看出必须满足以下条件：
 - node 中必须有 compatible 属性
 - 满足上一条后，根 node 的第一级子 node 会创建
@@ -114,6 +120,7 @@ int of_platform_populate(struct device_node *root,
 - 那上一级 node 不是 "simple-bus" 的 node 怎么办呢？不好意思，platform 平台不管，对于这类 node，它们的设备创建一般都由它的上一级 node 进行，比如 i2c、spi等，会在它们相应的 bus 上创建 device
 
 最后调用 of_platform_device_create_pdata 创建设备
+
 ```c
 static int of_platform_bus_create(struct device_node *bus,
                   const struct of_device_id *matches,
