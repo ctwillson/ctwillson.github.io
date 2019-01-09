@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Linux 进程管理（一）之基础概念
+sticky: Sticky
 categories: "linux Driver"
 description: "Linux scheduler"
 keywords:
