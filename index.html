@@ -1,96 +1,49 @@
----
-layout: default
-class: home
-css: ['pages/index.css']
-comments: false
----
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Hooltech 即将上线。硅基生物还是碳基生物？"
+    />
+    <title>Hooltech | Coming Soon</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="hooltech_full_company_name_vi/02_svg_outlined_production/hool_logo_only_blue_solid_outlined.svg"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <span id="top" class="top-anchor" aria-hidden="true"></span>
+    <header class="site-header">
+      <a class="brand-link" href="#top" aria-label="返回 Hooltech 首页顶部">
+        <img
+          class="site-logo"
+          src="hooltech_full_company_name_vi/06_png_transparent/hooltech_fullname_horizontal_blue_outlined_4000px.png"
+          alt="Hooltech (Shanghai) Co., Ltd."
+        />
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a class="nav-link" href="#about">关于我们</a>
+      </nav>
+    </header>
 
-<section class="banner">
-    <div class="collection-head">
-        <div class="container">
-            <div class="collection-title">
-              <h1 class="collection-header" id="sub-title"><span>{{ site.subtitle }}</span></h1>
-                <div class="collection-info">
-                    <span class="meta-info mobile-hidden">
-                        <span class="octicon octicon-location"></span>
-                        {{ site.location }}
-                    </span>
-                    <span class="meta-info">
-                        <span class="octicon octicon-organization"></span>
-                        <a href="{{ site.organization_url }}" target="_blank">{{ site.organization }}</a>
-                    </span>
-                     <span class="meta-info">
-                        <span class="octicon octicon-mark-github"></span>
-                        <a href="https://github.com/{{ site.github_username }}" target="_blank">{{ site.github_username }}</a>
-                    </span>
-                </div>
-            </div>
+    <main class="page-shell" aria-labelledby="mission-title">
+      <section class="poster hero" aria-label="Hooltech coming soon">
+        <h1 id="mission-title">硅基生物还是碳基生物？</h1>
+        <p class="status">coming soon</p>
+      </section>
+      <section id="about" class="about-section" aria-labelledby="about-title">
+        <div class="about-inner">
+          <p class="eyebrow">About Hooltech</p>
+          <h2 id="about-title">关于我们</h2>
+          <p>
+            Hooltech 关注硅基智能与碳基生命之间的新边界。
+          </p>
         </div>
-    </div>
-</section>
-<!-- /.banner -->
-<section class="container content">
-    <div class="columns">
-        <div class="column two-thirds" >
-            <ol class="repo-list">
-                {% for post in paginator.posts %}
-                <li class="repo-list-item">
-                    <h3 class="repo-list-name">
-                      <a href="{{ post.url }}">{{ post.title }}</a>
-                    </h3>
-                    <p class="repo-list-description">
-                        {{ post.excerpt | strip_html | strip }}
-                    </p>
-                    <p class="repo-list-meta">
-                        <span class="meta-info">
-                          <span class="octicon octicon-calendar"></span> {{ post.date | date: "%Y/%m/%d" }}
-                        </span>
-                        {% for cat in post.categories %}
-                        <span class="meta-info">
-                          <span class="octicon octicon-file-directory"></span>
-                          <a href="/categories/#{{ cat }}" title="{{ cat }}">{{ cat }}</a>
-                        </span>
-                        {% endfor %}
-                    </p>
-                </li>
-                {% endfor %}
-            </ol>
-        </div>
-        <div class="column one-third">
-            {% include sidebar-search.html %}
-            {% include sidebar-popular-repo.html %}
-        </div>
-    </div>
-    <div class="pagination text-align">
-      <div class="btn-group">
-        {% if paginator.previous_page %}
-          {% if paginator.previous_page == 1 %}
-              <a href="/" class="btn btn-outline">&laquo;</a>
-          {% else %}
-              <a href="/page{{paginator.previous_page}}"  class="btn btn-outline">&laquo;</a>
-          {% endif %}
-        {% else %}
-            <button disabled="disabled" href="javascript:;" class="btn btn-outline">&laquo;</button>
-        {% endif %}
-        {% if paginator.page == 1 %}
-            <a href="javascript:;" class="active btn btn-outline">1</a>
-        {% else %}
-            <a href="/"  class="btn btn-outline">1</a>
-        {% endif %}
-        {% for count in (2..paginator.total_pages) %}
-          {% if count == paginator.page %}
-              <a href="javascript:;"  class="active btn btn-outline">{{count}}</a>
-          {% else %}
-              <a href="/page{{count}}"  class="btn btn-outline">{{count}}</a>
-          {% endif %}
-        {% endfor %}
-        {% if paginator.next_page %}
-            <a href="/page{{paginator.next_page}}"  class="btn btn-outline">&raquo;</a>
-        {% else %}
-            <button disabled="disabled" href="javascript:;" class="btn btn-outline">&raquo;</button>
-        {% endif %}
-        </div>
-    </div>
-    <!-- /pagination -->
-</section>
-<!-- /section.content -->
+      </section>
+    </main>
+  </body>
+</html>
