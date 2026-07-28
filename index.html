@@ -7,6 +7,7 @@
       name="description"
       content="Hooltech 即将上线。硅基生物还是碳基生物？"
     />
+    <meta name="theme-color" content="#05070d" />
     <title>Hooltech | Coming Soon</title>
     <link
       rel="icon"
@@ -14,9 +15,18 @@
       href="hooltech_full_company_name_vi/02_svg_outlined_production/hool_logo_only_blue_solid_outlined.svg"
     />
     <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
   </head>
   <body>
     <span id="top" class="top-anchor" aria-hidden="true"></span>
+
+    <div class="ambient-scene" aria-hidden="true">
+      <div class="ambient-scene__grid"></div>
+      <div class="ambient-scene__glow ambient-scene__glow--blue"></div>
+      <div class="ambient-scene__glow ambient-scene__glow--violet"></div>
+      <div class="ambient-scene__noise"></div>
+    </div>
+
     <header class="site-header">
       <a class="brand-link" href="#top" aria-label="返回 Hooltech 首页顶部">
         <img
@@ -27,34 +37,216 @@
       </a>
       <nav class="site-nav" aria-label="主导航">
         <a class="nav-link" href="about/">关于我们</a>
-        <a class="nav-link" href="careers/">岗位招聘</a>
+        <a class="nav-link nav-link--accent" href="careers/">岗位招聘</a>
       </nav>
     </header>
 
     <main class="page-shell" aria-labelledby="mission-title">
       <section class="poster hero" aria-label="Hooltech coming soon">
-        <h1 id="mission-title">硅基生物还是碳基生物？</h1>
-        <p class="status">coming soon</p>
-      </section>
-      <section id="about" class="about-section" aria-labelledby="about-title">
-        <div class="about-inner">
-          <p class="eyebrow">About Hooltech</p>
-          <h2 id="about-title">关于我们</h2>
-          <p>
-            Hooltech 关注硅基智能与碳基生命之间的新边界。
+        <div class="hero-copy">
+          <p class="system-tag hero-enter">
+            <span class="system-tag__signal" aria-hidden="true"></span>
+            Shanghai · New intelligence in progress
           </p>
+
+          <h1 id="mission-title" class="hero-title hero-enter hero-enter--delay-1">
+            <span class="hero-title__line">硅基生物</span>
+            <span class="hero-title__line hero-title__line--gradient">还是碳基生物？</span>
+          </h1>
+
+          <p class="hero-intro hero-enter hero-enter--delay-2">
+            当智能不再只属于一种生命形态，<br />
+            我们在技术、系统与想象力的交界处，寻找下一种可能。
+          </p>
+
+          <div class="hero-actions hero-enter hero-enter--delay-3">
+            <a class="button button--primary" href="#about">
+              <span>探索 Hooltech</span>
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M4 10h11M11 6l4 4-4 4" />
+              </svg>
+            </a>
+            <a class="button button--ghost" href="careers/">
+              加入我们
+            </a>
+          </div>
+
+          <div class="hero-meta hero-enter hero-enter--delay-4" aria-label="Hooltech 状态">
+            <div class="meta-item">
+              <span class="meta-item__index">01</span>
+              <span class="meta-item__label">BASE</span>
+              <strong>SHANGHAI</strong>
+            </div>
+            <div class="meta-item">
+              <span class="meta-item__index">02</span>
+              <span class="meta-item__label">FOCUS</span>
+              <strong>HUMAN × AI</strong>
+            </div>
+            <div class="meta-item">
+              <span class="meta-item__index">03</span>
+              <span class="meta-item__label">STATUS</span>
+              <strong class="status">coming soon</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual hero-enter hero-enter--delay-2" aria-hidden="true">
+          <div class="visual-caption visual-caption--top">
+            <span>INTELLIGENCE FIELD</span>
+            <span>31.2304° N</span>
+          </div>
+
+          <div class="orbit-stage" data-orbit-stage>
+            <div class="orbit-stage__axis orbit-stage__axis--x"></div>
+            <div class="orbit-stage__axis orbit-stage__axis--y"></div>
+            <div class="orbit-ring orbit-ring--outer">
+              <i class="orbit-node orbit-node--cyan"></i>
+            </div>
+            <div class="orbit-ring orbit-ring--middle">
+              <i class="orbit-node orbit-node--violet"></i>
+            </div>
+            <div class="orbit-ring orbit-ring--inner"></div>
+            <div class="orbit-pulse orbit-pulse--one"></div>
+            <div class="orbit-pulse orbit-pulse--two"></div>
+
+            <div class="orbit-core">
+              <div class="orbit-core__halo"></div>
+              <img
+                src="hooltech_full_company_name_vi/02_svg_outlined_production/hool_logo_only_white_outlined.svg"
+                alt=""
+              />
+              <span class="orbit-core__status">ONLINE</span>
+            </div>
+
+            <div class="orbit-label orbit-label--carbon">
+              <span>CARBON</span>
+              <strong>感知 · 共情</strong>
+            </div>
+            <div class="orbit-label orbit-label--silicon">
+              <span>SILICON</span>
+              <strong>计算 · 演化</strong>
+            </div>
+          </div>
+
+          <div class="visual-caption visual-caption--bottom">
+            <span>HOOL / CORE 00</span>
+            <span class="live-signal">SIGNAL ACTIVE</span>
+          </div>
+        </div>
+
+        <a class="scroll-cue" href="#about" aria-label="向下查看关于 Hooltech">
+          <span>SCROLL TO DISCOVER</span>
+          <i aria-hidden="true"></i>
+        </a>
+      </section>
+
+      <section id="about" class="about-section story-section" aria-labelledby="about-title">
+        <div class="section-shell">
+          <div class="section-heading" data-reveal>
+            <p class="eyebrow"><span>01</span> About Hooltech</p>
+            <h2 id="about-title">答案，也许从来不是二选一。</h2>
+          </div>
+
+          <div class="story-layout">
+            <div class="story-statement" data-reveal>
+              <p class="statement-kicker">OUR QUESTION</p>
+              <p class="statement-copy">
+                Hooltech 关注硅基智能与碳基生命之间的新边界。
+                我们相信真正值得期待的未来，发生在两者彼此理解、彼此增强的交汇处。
+              </p>
+              <a class="inline-link" href="about/">
+                了解我们的方向
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M4 10h11M11 6l4 4-4 4" />
+                </svg>
+              </a>
+            </div>
+
+            <div class="concept-grid" data-reveal>
+              <article class="concept-card concept-card--carbon">
+                <span class="concept-card__number">C / 01</span>
+                <div class="concept-card__icon" aria-hidden="true">
+                  <i></i><i></i><i></i>
+                </div>
+                <h3>碳基直觉</h3>
+                <p>感知、经验与共情，构成真实世界里不可替代的温度。</p>
+              </article>
+              <article class="concept-card concept-card--bridge">
+                <span class="concept-card__number">× / 02</span>
+                <div class="bridge-wave" aria-hidden="true">
+                  <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                </div>
+                <h3>共生界面</h3>
+                <p>让技术自然地融入人的判断、行动与创造过程。</p>
+              </article>
+              <article class="concept-card concept-card--silicon">
+                <span class="concept-card__number">SI / 03</span>
+                <div class="silicon-mark" aria-hidden="true">
+                  <span></span>
+                </div>
+                <h3>硅基智能</h3>
+                <p>计算、连接与演化，为复杂问题打开新的解法空间。</p>
+              </article>
+            </div>
+          </div>
         </div>
       </section>
+
       <section id="careers" class="about-section careers-section" aria-labelledby="careers-title">
-        <div class="about-inner">
-          <p class="eyebrow">Careers</p>
-          <h2 id="careers-title">岗位招聘</h2>
-          <p>
-            实习生招聘已开放：技术开发实习生（React Native / 全栈方向）、软件测试实习生。简历请发送至
-            <a class="text-link" href="mailto:anson@hooltech.com">anson@hooltech.com</a>。
-          </p>
+        <div class="section-shell">
+          <div class="careers-heading" data-reveal>
+            <div class="section-heading">
+              <p class="eyebrow"><span>02</span> Careers</p>
+              <h2 id="careers-title">和我们一起，<br />把未知做成日常。</h2>
+            </div>
+            <p>
+              我们正在寻找愿意主动学习、认真交付，并对真实产品有成就感的年轻创造者。
+            </p>
+          </div>
+
+          <div class="role-preview-grid">
+            <a class="role-preview" href="careers/#react-native-intern" data-reveal>
+              <span class="role-preview__topline">
+                <span>DEVELOPMENT</span>
+                <span>INTERNSHIP</span>
+              </span>
+              <span class="role-preview__index">01</span>
+              <strong>技术开发实习生</strong>
+              <span class="role-preview__detail">React Native / 全栈方向</span>
+              <span class="role-preview__arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="role-preview" href="careers/#qa-intern" data-reveal>
+              <span class="role-preview__topline">
+                <span>QUALITY</span>
+                <span>INTERNSHIP</span>
+              </span>
+              <span class="role-preview__index">02</span>
+              <strong>软件测试实习生</strong>
+              <span class="role-preview__detail">功能 / 接口 / 移动端测试</span>
+              <span class="role-preview__arrow" aria-hidden="true">↗</span>
+            </a>
+          </div>
+
+          <div class="application-cta" data-reveal>
+            <div>
+              <span class="application-cta__label">READY TO BUILD?</span>
+              <p>把你的好奇心，变成真正被使用的产品。</p>
+            </div>
+            <a class="button button--primary" href="mailto:anson@hooltech.com">
+              <span>anson@hooltech.com</span>
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M4 10h11M11 6l4 4-4 4" />
+              </svg>
+            </a>
+          </div>
         </div>
       </section>
     </main>
+
+    <footer class="site-footer">
+      <a class="footer-mark" href="#top" aria-label="返回页面顶部">hool</a>
+      <p>平而（上海）科技有限公司</p>
+      <p class="footer-meta">© 2026 HOOLTECH · SHANGHAI</p>
+    </footer>
   </body>
 </html>
