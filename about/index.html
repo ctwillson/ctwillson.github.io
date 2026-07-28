@@ -7,6 +7,7 @@
       name="description"
       content="关于 Hooltech：探索硅基智能与碳基生命之间的新边界。"
     />
+    <meta name="theme-color" content="#05070d" />
     <title>关于我们 | Hooltech</title>
     <link
       rel="icon"
@@ -14,8 +15,16 @@
       href="../hooltech_full_company_name_vi/02_svg_outlined_production/hool_logo_only_blue_solid_outlined.svg"
     />
     <link rel="stylesheet" href="../styles.css" />
+    <script src="../script.js" defer></script>
   </head>
   <body>
+    <div class="ambient-scene" aria-hidden="true">
+      <div class="ambient-scene__grid"></div>
+      <div class="ambient-scene__glow ambient-scene__glow--blue"></div>
+      <div class="ambient-scene__glow ambient-scene__glow--violet"></div>
+      <div class="ambient-scene__noise"></div>
+    </div>
+
     <header class="site-header">
       <a class="brand-link" href="../#top" aria-label="返回 Hooltech 首页顶部">
         <img
@@ -25,8 +34,8 @@
         />
       </a>
       <nav class="site-nav" aria-label="主导航">
-        <a class="nav-link" href="../about/">关于我们</a>
-        <a class="nav-link" href="../careers/">岗位招聘</a>
+        <a class="nav-link" href="../about/" aria-current="page">关于我们</a>
+        <a class="nav-link nav-link--accent" href="../careers/">岗位招聘</a>
       </nav>
     </header>
 
@@ -48,5 +57,11 @@
         </section>
       </div>
     </main>
+
+    <footer class="site-footer">
+      <a class="footer-mark" href="../#top" aria-label="返回首页">hool</a>
+      <p>平而（上海）科技有限公司</p>
+      <p class="footer-meta">© 2026 HOOLTECH · SHANGHAI</p>
+    </footer>
   </body>
 </html>

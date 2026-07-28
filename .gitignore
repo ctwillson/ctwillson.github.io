@@ -1,0 +1,14 @@
+.DS_Store
+.deploy/
+.superpowers/
+docs/
+
+# Keep only the brand assets used by the published site.
+hooltech_full_company_name_vi/*
+!hooltech_full_company_name_vi/02_svg_outlined_production/
+!hooltech_full_company_name_vi/06_png_transparent/
+hooltech_full_company_name_vi/02_svg_outlined_production/*
+!hooltech_full_company_name_vi/02_svg_outlined_production/hool_logo_only_blue_solid_outlined.svg
+!hooltech_full_company_name_vi/02_svg_outlined_production/hool_logo_only_white_outlined.svg
+hooltech_full_company_name_vi/06_png_transparent/*
+!hooltech_full_company_name_vi/06_png_transparent/hooltech_fullname_horizontal_blue_outlined_4000px.png
