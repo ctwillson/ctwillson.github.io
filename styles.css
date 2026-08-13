@@ -295,7 +295,7 @@ svg {
 .poster {
   position: relative;
   display: grid;
-  min-height: 100svh;
+  min-height: min(100svh, 980px);
   width: min(100%, calc(var(--page-width) + 2 * var(--page-gutter)));
   margin: 0 auto;
   padding: clamp(126px, 13vh, 160px) var(--page-gutter) clamp(92px, 10vh, 120px);

@@ -79,6 +79,14 @@ assert(html.includes("关于我们"), "Missing about navigation text");
 assert(html.includes("岗位招聘"), "Missing careers navigation text");
 assert(html.includes('id="about"'), "Missing about section anchor");
 assert(html.includes('id="products"'), "Missing products section anchor");
+const aboutSectionPosition = html.indexOf('<section id="about"');
+const productsSectionPosition = html.indexOf('<section id="products"');
+const careersSectionPosition = html.indexOf('<section id="careers"');
+assert(
+  aboutSectionPosition < productsSectionPosition &&
+    productsSectionPosition < careersSectionPosition,
+  "Homepage sections should keep the company story together before the product showcase"
+);
 assert(html.includes("乎而"), "Missing Hool app name on home page");
 assert(html.includes("本地生活社交产品"), "Missing Hool app positioning on home page");
 assert(
@@ -143,6 +151,10 @@ assert(css.includes(".content-shell"), "CSS should style subpages");
 assert(css.includes(".home-product-section"), "CSS should style the home product section");
 assert(css.includes(".product-page-hero"), "CSS should style the product page hero");
 assert(css.includes(".phone-mockup"), "CSS should style the app phone mockup");
+assert(
+  /\.poster\s*\{[\s\S]*?min-height:\s*min\(100svh,\s*\d+px\)/.test(css),
+  "Desktop hero height should be capped on tall viewports"
+);
 assert(css.includes(".job-card"), "CSS should style job cards");
 assert(css.includes(".job-section"), "CSS should style job details");
 assert(css.includes(".application-panel"), "CSS should style application instructions");
